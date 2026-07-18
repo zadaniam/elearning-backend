@@ -221,6 +221,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ADMIN_FOLDER_PATH = os.path.join(BASE_DIR, "templates-admin")
 
+# Mengunci jalur folder 'static' secara dinamis
+STATIC_FOLDER_PATH = os.path.join(BASE_DIR, "static")
+
+# Mount folder static agar bisa diakses publik oleh browser
+app.mount("/static", StaticFiles(directory=STATIC_FOLDER_PATH), name="static")
 
 # Inisialisasi Jinja2 untuk membaca folder 'templates'
 templates = Jinja2Templates(directory=ADMIN_FOLDER_PATH)
