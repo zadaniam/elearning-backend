@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Katalog Materi Pelajaran{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    
+    <!-- Bagian Atas / Header Halaman -->
+    <div>
+        <h3 class="text-2xl font-bold text-slate-900 tracking-tight">📚 Katalog Video Materi</h3>
+        <p class="text-sm text-slate-500 mt-1">Kelola konten modul, video edukasi, dan hak akses materi aplikasi mobile Anda.</p>
+    </div>
+
+    <!-- AREA DUA KOLOM: FORM TAMBAH MATERI & DAFTAR TABEL -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        
+        <!-- KOLOM KIRI: FORM TAMBAH MATERI (DIPERLUAS) -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 h-fit">
+            <div>
+                <h4 class="text-base font-bold text-slate-900">🆕 Tambah Video Materi Baru</h4>
+                <p class="text-xs text-slate-500 mt-1">Isi formulir untuk menerbitkan modul dengan silabus & thumbnail langsung ke aplikasi mobile.</p>
+            </div>
+            
+            <form hx-post="/admin/materi/add" hx-target="#notifikasi-materi" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">ID Materi (Kunci Firebase)</label>
+                    <input type="text" name="materi_id" placeholder="misal: materi_6" required
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition duration-150 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Judul Materi (Title)</label>
+                    <input type="text" name="judul" placeholder="Masukkan judul materi" required
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition duration-150 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Kategori Bisnis</label>
+                    <input type="text" name="kategori" placeholder="misal: Marketing, Keuangan" required
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition duration-150 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Link Tautan Video (URL)</label>
+                    <input type="url" name="link_video" placeholder="https://youtube.com..." required
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition duration-150 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Link Gambar Thumbnail</label>
+                    <input type="url" name="thumbnail" placeholder="https://unsplash.com... atau link gambar" required
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition duration-150 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Deskripsi Singkat</label>
+                    <textarea name="deskripsi" rows="2" placeholder="Jelaskan ringkasan materi video ini..." required
+                              class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition duration-150 text-sm" style="width: 100% !important; border-radius: 0.75rem !important;"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Silabus / Poin Pembelajaran</label>
+                    <textarea name="silabus" rows="3" placeholder="Poin 1: ...&#10;Poin 2: ...&#10;Poin 3: ..." required
+                              class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition duration-150 text-sm" style="width: 100% !important; border-radius: 0.75rem !important;"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Tipe Akses Siswa</label>
+                    <select name="is_premium" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition duration-150 text-sm" style="width: 100% !important;">
+                        <option value="true">🔒 Khusus Akun Premium</option>
+                        <option value="false">🔓 Gratis untuk Semua Siswa</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl transition duration-150 text-sm shadow-sm">
+                    Terbitkan Video Materi
+                </button>
+            </form>
+            <div id="notifikasi-materi"></div>
+        </div>
+
+        <!-- KOLOM KANAN: TABEL DAFTAR KELAS AKTIF -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden xl:col-span-2 h-fit">
+            <div class="p-5 border-b border-slate-100 bg-slate-50/50">
+                <h4 class="text-sm font-bold text-slate-800">📋 Daftar Modul Aktif Saat Ini</h4>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50/30 border-b border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider">
+                            <th class="p-4 pl-6">Preview / Thumbnail</th>
+                            <th class="p-4">Detail Materi & Silabus</th>
+                            <th class="p-4">Kategori</th>
+                            <th class="p-4">Sifat Akses</th>
+                            <th class="p-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-700 text-sm divide-y divide-slate-100">
+                        {% if materi_list %}
+                            {% for materi in materi_list %}
+                            <!-- Taruh ID dinamis agar HTMX bisa menghapus baris ini secara halus -->
+                            <tr id="baris-{{ materi.materi_id }}" class="hover:bg-slate-50/80 transition duration-150">
+                                <!-- Kolom Thumbnail -->
+                                <td class="p-4 pl-6 w-32">
+                                    {% if materi.thumbnail %}
+                                        <img src="{{ materi.thumbnail }}" class="w-24 h-16 object-cover rounded-lg border border-slate-200 shadow-sm" alt="thumbnail">
+                                    {% else %}
+                                        <div class="w-24 h-16 bg-slate-100 text-slate-400 rounded-lg flex items-center justify-center text-xs font-medium border border-dashed border-slate-300">No Image</div>
+                                    {% endif %}
+                                </td>
+                                <!-- Kolom Detail & Silabus -->
+                                <td class="p-4">
+                                    <div class="font-bold text-slate-900 text-base">{{ materi.title }}</div>
+                                    <div class="text-xs text-slate-500 mt-1 max-w-md"><span class="font-semibold text-slate-700">Deskripsi:</span> {{ materi.deskripsi }}</div>
+                                    {% if materi.silabus %}
+                                        <div class="text-xs text-slate-500 mt-2 p-2 bg-slate-50 border border-slate-100 rounded-lg max-w-md whitespace-pre-line"><span class="font-semibold text-slate-700">📝 Silabus:</span><br/>{{ materi.silabus }}</div>
+                                    {% endif %}
+                                    <div class="text-[10px] text-slate-400 font-mono mt-1 flex items-center space-x-2">
+                                        <span>ID: {{ materi.materi_id }}</span>
+                                        <span>•</span>
+                                        <a href="{{ materi.url }}" target="_blank" class="text-blue-500 hover:underline">Link Video 🔗</a>
+                                    </div>
+                                </td>
+                                <td class="p-4">
+                                    <span class="text-xs text-blue-700 font-semibold bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">{{ materi.kategori }}</span>
+                                </td>
+                                <td class="p-4">
+                                    {% if materi.is_premium == True or materi.is_premium == 'true' %}
+                                        <span class="text-xs text-amber-700 font-medium bg-amber-50 px-2 py-0.5 rounded-md border border-amber-100">🔒 Premium</span>
+                                    {% else %}
+                                        <span class="text-xs text-green-700 font-medium bg-green-50 px-2 py-0.5 rounded-md border border-green-100">🔓 Gratis</span>
+                                    {% endif %}
+                                </td>
+                                <td class="p-4 text-center">
+                                    <!-- AJAX DELETE HTMX -->
+                                    <button hx-delete="/admin/materi/delete/{{ materi.materi_id }}"
+                                            hx-target="#baris-{{ materi.materi_id }}"
+                                            hx-swap="outerHTML"
+                                            hx-confirm="Apakah Anda yakin ingin menghapus materi ini dari aplikasi mobile?"
+                                            class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-3 py-1.5 text-xs font-bold rounded-xl transition duration-150 w-auto">
+                                        🗑️ Hapus
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %} <!-- TAG ENDFOR SEKARANG MENUTUP DI TEMPAT YANG BENAR -->
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="p-8 text-center text-slate-400 font-medium">
+                                    📭 Katalog materi kosong. Mulai tambahkan materi di panel sebelah kiri.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

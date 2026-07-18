@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Manajemen Pengguna{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    
+    <!-- Header Halaman -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h3 class="text-2xl font-bold text-slate-900 tracking-tight">👥 Manajemen Pengguna</h3>
+            <p class="text-sm text-slate-500 mt-1">Daftar lengkap pengguna yang terdaftar di aplikasi mobile e-learning Anda.</p>
+        </div>
+        <div class="bg-blue-50 text-blue-700 text-xs font-semibold px-4 py-2 rounded-xl border border-blue-200 shadow-sm">
+            Total Terdaftar: {{ users|length }} Orang
+        </div>
+    </div>
+
+    <!-- KONTEN UTAMA: TABEL DATA SISWA -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider">
+                        <th class="p-4 pl-6">Nama Lengkap</th>
+                        <th class="p-4">Email & No. WA</th>
+                        <th class="p-4">Informasi Bisnis</th>
+                        <th class="p-4">Tanggal Daftar</th>
+                        <th class="p-4 text-center">Status Akun</th>
+                    </tr>
+                </thead>
+                <tbody class="text-slate-700 text-sm divide-y divide-slate-100">
+                    {% if users %}
+                        {% for user in users %}
+                        <tr class="hover:bg-slate-50/80 transition duration-150">
+                            <!-- Kolom 1: Nama Lengkap -->
+                            <td class="p-4 pl-6 font-semibold text-slate-900">
+                                {{ user.nama_lengkap }}
+                                <div class="text-[10px] text-slate-400 font-mono mt-0.5 select-all">{{ user.uid }}</div>
+                            </td>
+                            
+                            <!-- Kolom 2: Kontak -->
+                            <td class="p-4 space-y-0.5">
+                                <div class="font-medium text-slate-800">{{ user.email }}</div>
+                                <div class="text-xs text-slate-500 flex items-center space-x-1">
+                                    <span>🟢</span> 
+                                    <a href="https://wa.me/{{ user.whatsapp }}" target="_blank" class="hover:text-green-600 hover:underline font-mono">{{ user.whatsapp }}</a>
+                                </div>
+                            </td>
+                            
+                            <!-- Kolom 3: Info Bisnis -->
+                            <td class="p-4">
+                                <div class="font-medium text-slate-900">{{ user.nama_bisnis }}</div>
+                                <div class="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded-md inline-block mt-1">{{ user.bidang_bisnis }}</div>
+                            </td>
+                            
+                            <!-- Kolom 4: Tanggal Daftar -->
+                            <td class="p-4 text-xs font-medium text-slate-500 font-mono">
+                                {{ user.created_at }}
+                            </td>
+                            
+                            <!-- Kolom 5: Status Premium / Regular -->
+                            <td class="p-4 text-center">
+                                {% if user.is_premium %}
+                                    <span class="inline-flex items-center px-3 py-1 text-xs font-bold bg-green-100 text-green-800 rounded-full border border-green-200">
+                                        👑 Premium
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 text-xs font-bold bg-slate-100 text-slate-500 rounded-full border border-slate-200">
+                                        📖 Free
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="p-8 text-center text-slate-400 font-medium">
+                                📭 Belum ada data pengguna yang tersimpan di Firebase.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
