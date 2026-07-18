@@ -1,9 +1,21 @@
+# Core Framework & Server
 fastapi==0.139.2
-httpx==0.28.1
-midtransclient==1.4.2
-google-genai==2.7.0
-protobuf==7.35.1
+uvicorn==0.48.0
 pydantic==2.13.4
+pydantic-settings==2.14.1
+
+# Frontend / Web Admin Admin HTMX
+jinja2==3.1.6
+python-multipart==0.0.29
+
+# Integrasi Layanan (AI & Payment)
+google-genai==2.7.0
+midtransclient==1.4.2
+
+# Utilitas HTTP & Environtment
+httpx==0.28.1
 python-dotenv==1.2.2
-uvicorn==0.51.0
-Jinja2==3.1.6
+protobuf==6.33.6
+
+# Validasi Data Tambahan
+email-validator==2.3.0
