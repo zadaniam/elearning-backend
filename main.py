@@ -3,6 +3,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 from services.auth_service import AuthService
 from services.gemini_service import GeminiService
@@ -13,6 +14,8 @@ from pydantic import BaseModel, EmailStr
 
 
 app = FastAPI(title="E-Learning Business Backend")
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
+
 
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
