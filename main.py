@@ -20,7 +20,7 @@ app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
-    "https://bisnisanda.com"
+    "https://elearning-backend-production-b5a4.up.railway.app"
 ]
 
 app.add_middleware(
