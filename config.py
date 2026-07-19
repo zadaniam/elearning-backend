@@ -27,4 +27,20 @@ class Settings:
     # Aturan otomatis untuk keamanan payment gateway
     MIDTRANS_IS_PRODUCTION: bool = not IS_DEVELOPMENT
 
+    # Properti dinamis untuk CORS ALLOWED ORIGINS 
+    @property
+    def ALLOWED_ORIGINS(self) -> list[str]:
+        # Tautan dasar yang selalu diizinkan di semua lingkungan
+        origins = [
+            "http://localhost:3000",
+            "http://localhost:8000"
+        ]
+
+        if self.ENVIRONMENT == "production":
+            origins.append("https://elearning-backend-production-b5a4.up.railway.app")
+        elif self.ENVIRONMENT == "staging":
+            origins.append("https://elearning-backend-staging-8f81.up.railway.app")
+            
+        return origins
+
 settings = Settings()

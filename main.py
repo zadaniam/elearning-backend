@@ -9,23 +9,17 @@ from services.auth_service import AuthService
 from services.gemini_service import GeminiService
 from services.payment_service import PaymentService
 from database import DatabaseManager
+from config import settings
 
 from pydantic import BaseModel, EmailStr
 
 
 app = FastAPI(title="E-Learning Business Backend")
+
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
-
-
-ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "https://elearning-backend-production-b5a4.up.railway.app"
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
