@@ -1,5 +1,26 @@
+# 1. Variabel Lingkungan & Kunci Rahasia Lokal
 .env
-node_modules/
+.env.local
+.env.*.local
+
+# 2. Database Lokal (Agar data uji coba lokal tidak mengotori server)
+*.db
+*.sqlite3
+
+# 3. Sampah Kompilasi Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# 4. Node.js & Kompilasi Aset Frontend Lokal (Tailwind CSS)
+node_modules/
+npm-debug.log*
+.eslintcache
+
+# 5. Sampah Sistem Operasi & Text Editor Laptop
 .DS_Store
+.vscode/
+.idea/
