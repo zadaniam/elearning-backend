@@ -14,7 +14,7 @@ class Settings:
     # 1. Firebase Config
     FIREBASE_API_KEY: str = os.getenv("FIREBASE_API_KEY", "")
     FIREBASE_PROJECT_ID: str = os.getenv("FIREBASE_PROJECT_ID", "")
-    FIREBASE_BASE_URL: str = f"https://{FIREBASE_PROJECT_ID}-default-rtdb.asia-southeast1.firebasedatabase.app"
+    FIREBASE_BASE_URL: str = os.getenv("FIREBASE_BASE_URL", "")
     
     # 2. AI Config
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
@@ -30,17 +30,12 @@ class Settings:
     # Properti dinamis untuk CORS ALLOWED ORIGINS 
     @property
     def ALLOWED_ORIGINS(self) -> list[str]:
-        # Tautan dasar yang selalu diizinkan di semua lingkungan
-        origins = [
-            "http://localhost:3000",
-            "http://localhost:8000"
-        ]
-
-        if self.ENVIRONMENT == "production":
-            origins.append("https://elearning-backend-production-b5a4.up.railway.app")
-        elif self.ENVIRONMENT == "staging":
-            origins.append("https://elearning-backend-staging-8f81.up.railway.app")
-            
-        return origins
+        # Ambil string dari .env, kalau kosong pakai localhost sebagai fallback
+        raw_origins = os.getenv(
+            "BASE_URL", 
+            "http://localhost:3000,http://localhost:8000"
+        )
+        # Memecah string berbasis koma menjadi list Python: ['url1', 'url2']
+        return [origin.strip() for origin in raw_origins.split(",")]
 
 settings = Settings()
