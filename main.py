@@ -1,9 +1,10 @@
 # backend/main.py
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+import datetime
 
 from services.auth_service import AuthService
 from services.gemini_service import GeminiService
@@ -46,6 +47,31 @@ class PaymentChargeSchema(BaseModel):
     item_name: str
     user_email: str
     uid: str
+
+@app.get("/health/ready")
+async def readiness_check():
+    """
+    Endpoint Readiness Check untuk Load Balancer / Platform Hosting (Render).
+    Memastikan koneksi antara server backend dengan Firebase berjalan normal.
+    """
+    # 1. Jalankan pengujian koneksi ke Firebase
+    is_firebase_ready = await DatabaseManager.ping_firebase()
+    
+    # 2. Jika Firebase tidak merespons, lempar status 503 (Service Unavailable)
+    if not is_firebase_ready:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "status": "NOT_READY",
+                "reason": "Koneksi ke Firebase Database terputus atau timeout."
+            }
+        )
+        
+    # 3. Jika aman, kembalikan status 200 OK
+    return {
+        "status": "READY",
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
 
 @app.post("/api/v1/auth/login")
 async def api_login(payload: UserLoginSchema):

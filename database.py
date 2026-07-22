@@ -178,4 +178,18 @@ class DatabaseManager:
         except Exception:
             return False
 
+    @staticmethod
+    async def ping_firebase():
+        """
+        Melakukan ping ringan ke Firebase untuk memeriksa readiness server.
+        Menggunakan shallow=true agar Firebase hanya mengembalikan struktur kunci utama 
+        tanpa mengunduh seluruh data (sangat cepat dan hemat bandwidth).
+        """
+        try:
+            async with httpx.AsyncClient() as client:
+                # Timeout ketat 2 detik agar load balancer tidak menunggu terlalu lama
+                response = await client.get(f"{BASE_URL}/.json?shallow=true", timeout=2.0)
+            return response.status_code == 200
+        except Exception:
+            return False
 
