@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
-import datetime
+from datetime import datetime
 
 from services.auth_service import AuthService
 from services.gemini_service import GeminiService
